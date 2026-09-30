@@ -1,0 +1,245 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --ease-arch: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Keep anchored sections clear of the fixed 64px nav */
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
+
+  body {
+    @apply bg-warm-white text-charcoal font-sans antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Typography scale */
+  /* Fluid display sizes: the fixed 72px/56px scale overflowed 375px screens */
+  .display-xl { @apply font-display font-normal tracking-tight; font-size: clamp(2.5rem, 1.6rem + 4.2vw, 5.5rem); line-height: 1.12; padding-bottom: 0.06em; }
+  .display-lg { @apply font-display font-normal tracking-tight; font-size: clamp(2rem, 1.4rem + 2.8vw, 4rem); line-height: 1.16; padding-bottom: 0.06em; }
+  .display-md { @apply font-display font-normal tracking-tight; font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem); line-height: 1.2; }
+  .display-sm { @apply text-display-sm font-display font-normal; }
+  .heading-lg { @apply text-heading-lg font-semibold; }
+  .heading-md { @apply text-heading-md font-semibold; }
+  .heading-sm { @apply text-heading-sm font-semibold; }
+  .body-lg { @apply text-body-lg leading-relaxed; }
+  .body { @apply text-body leading-relaxed; }
+  .body-sm { @apply text-body-sm leading-relaxed; }
+  .caption { @apply text-caption leading-normal; }
+
+  /* Focus visible for accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-warm-white;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-accent/20 text-charcoal;
+  }
+}
+
+@layer components {
+  /* Button variants */
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3
+           bg-accent text-paper font-medium
+           rounded-md transition-all duration-arch ease-arch
+           hover:bg-accent-dark active:scale-[0.98]
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3
+           border-2 border-charcoal text-charcoal font-medium
+           rounded-md transition-all duration-arch ease-arch
+           hover:bg-charcoal/5 active:scale-[0.98]
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2;
+  }
+
+  .btn-tertiary {
+    @apply inline-flex items-center justify-center px-4 py-2
+           text-charcoal font-medium
+           rounded-md transition-all duration-arch ease-arch
+           hover:text-accent hover:underline
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2;
+  }
+
+  /* Card */
+  .card {
+    @apply bg-paper rounded-lg shadow-sm border border-concrete/10
+           transition-all duration-arch ease-arch
+           hover:shadow-md hover:border-concrete/20;
+  }
+
+  /* Section wrapper */
+  .section-wrapper {
+    @apply w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16;
+  }
+
+  .section-inner {
+    @apply max-w-[1440px] mx-auto;
+  }
+
+  /* Section header — left-aligned editorial split (eyebrow + title | lead) */
+  .eyebrow {
+    @apply flex items-center gap-3 text-accent font-semibold tracking-[0.18em] uppercase text-xs mb-4;
+  }
+  .eyebrow::before {
+    content: '';
+    @apply block h-px w-8 bg-current;
+  }
+  /* On charcoal/photo backgrounds crimson drops below 3:1 — use the light tint */
+  .eyebrow-on-dark {
+    @apply text-accent-light;
+  }
+
+  /* Sticky CTA */
+  .sticky-cta {
+    @apply fixed bottom-0 left-0 right-0 z-50
+           bg-warm-white/95 backdrop-blur-sm border-t border-concrete/10
+           px-4 py-3 sm:px-6 lg:px-8
+           hidden lg:block;
+  }
+
+  .sticky-cta-mobile {
+    @apply fixed bottom-0 left-0 right-0 z-50
+           bg-warm-white/95 backdrop-blur-sm border-t border-concrete/10
+           px-4 py-3
+           lg:hidden;
+  }
+}
+
+/* ---- Scroll motion (outside @layer so Tailwind never purges JS-only classes) ---- */
+/*
+ * Scroll reveal (driven by src/components/ScrollMotion.tsx).
+ * Hidden states apply only under html.js-reveal, which an inline script sets before paint,
+ * so content is never hidden when JS is off. .is-visible is added once per element.
+ */
+.js-reveal .reveal,
+.js-reveal .animate-slide-up {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition: opacity 900ms var(--ease-arch), transform 900ms var(--ease-arch);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.js-reveal .reveal-fade,
+.js-reveal .animate-fade-in {
+  opacity: 0;
+  transition: opacity 1000ms var(--ease-arch);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+/* Images: unveil upward from a clip while settling from a slight zoom */
+.js-reveal .reveal-clip,
+.js-reveal .animate-clip-reveal {
+  clip-path: inset(18% 0 0 0);
+  transition: clip-path 1200ms var(--ease-arch);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.js-reveal .reveal-clip > img,
+.js-reveal .reveal-clip > * > img {
+  transform: scale(1.12);
+  transition: transform 1600ms var(--ease-arch);
+}
+/* Hairlines and rules draw from the left */
+.js-reveal .reveal-line {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1100ms var(--ease-arch);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+/* FAQ answer slides in when its <details> opens (moved out of an inline <style> that broke hydration) */
+@keyframes faq-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: none; }
+}
+details[open] > .faq-body {
+  animation: faq-in 500ms var(--ease-arch) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  details[open] > .faq-body { animation: none; }
+}
+
+/* Completion seal: pressed down once, like a rubber stamp (hero, on load) */
+@keyframes seal-press {
+  0% { opacity: 0; transform: scale(1.45) rotate(-4deg); }
+  60% { opacity: 1; transform: scale(0.97) rotate(0deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+.seal-press {
+  animation: seal-press 560ms cubic-bezier(0.2, 0.9, 0.25, 1) 1100ms both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .seal-press { animation: none; }
+}
+
+/* Vertical rails draw from the top */
+.js-reveal .reveal-line-y {
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 1400ms var(--ease-arch);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js-reveal .is-visible {
+  opacity: 1;
+  transform: none;
+}
+/* clip-path only on image wrappers — on text it cropped Fraunces descenders (g, y, p) below the line box */
+.js-reveal .reveal-clip.is-visible,
+.js-reveal .animate-clip-reveal.is-visible {
+  clip-path: inset(0 0 0 0);
+}
+.js-reveal .reveal-clip.is-visible > img,
+.js-reveal .reveal-clip.is-visible > * > img {
+  transform: scale(1);
+}
+
+/* Failsafe: if the observer never boots, show everything */
+.reveal-all .reveal,
+.reveal-all .reveal-fade,
+.reveal-all .reveal-clip,
+.reveal-all .reveal-line,
+.reveal-all .reveal-line-y,
+.reveal-all .animate-slide-up,
+.reveal-all .animate-fade-in,
+.reveal-all .animate-clip-reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .js-reveal .reveal,
+  .js-reveal .reveal-fade,
+  .js-reveal .reveal-clip,
+  .js-reveal .reveal-line,
+  .js-reveal .reveal-line-y,
+  .js-reveal .animate-slide-up,
+  .js-reveal .animate-fade-in,
+  .js-reveal .animate-clip-reveal,
+  .js-reveal .reveal-clip > img {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+    transition: none;
+  }
+}
+
+/* Stagger helpers (kept for existing markup) */
+.delay-100 { --reveal-delay: 100ms; }
+.delay-200 { --reveal-delay: 200ms; }
+.delay-300 { --reveal-delay: 300ms; }
+.delay-400 { --reveal-delay: 400ms; }
+.delay-500 { --reveal-delay: 500ms; }
