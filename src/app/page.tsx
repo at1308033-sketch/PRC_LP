@@ -7,6 +7,9 @@ import FactRibbon from '@/components/FactRibbon';
 import Location from '@/sections/Location';
 import Project from '@/sections/Project';
 import Product from '@/sections/Product';
+import ProductPoster from '@/sections/ProductPoster';
+import SpacesChapters from '@/sections/SpacesChapters';
+import SpatialGallery from '@/sections/SpatialGallery';
 import UseCase from '@/sections/UseCase';
 import Reality from '@/sections/Reality';
 import Legal from '@/sections/Legal';
@@ -28,7 +31,10 @@ export default function Home() {
         <Location />
         <Project />
         <Product />
+        <ProductPoster />
+        <SpacesChapters />
         <UseCase />
+        <SpatialGallery />
         <Reality />
         <Legal />
         <Inauguration />

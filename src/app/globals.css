@@ -243,3 +243,200 @@ details[open] > .faq-body {
 .delay-300 { --reveal-delay: 300ms; }
 .delay-400 { --reveal-delay: 400ms; }
 .delay-500 { --reveal-delay: 500ms; }
+
+/* ---- Product poster ---- */
+/* Image settles from a slight zoom when the stage scrolls in (.reveal-fade supplies the .is-visible trigger) */
+.js-reveal .poster-zoom img {
+  transform: scale(1.06);
+  transition: transform 1400ms var(--ease-arch);
+}
+.js-reveal .poster-zoom.is-visible img {
+  transform: scale(1);
+}
+.render-tag {
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(30, 26, 23, 0.6);
+  padding: 5px 8px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+@keyframes pin-ping {
+  0% { transform: scale(1); opacity: 0.6; }
+  70%, 100% { transform: scale(3); opacity: 0; }
+}
+.pin-ping {
+  animation: pin-ping 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal .poster-zoom img { transform: none; transition: none; }
+  .pin-ping { animation: none; opacity: 0; }
+}
+
+/* ---- Spaces chapters (src/sections/SpacesChapters.tsx, driven by ChapterScroller) ---- */
+/*
+ * --t1..--t3 (0→1) are the wipe progress of chapters 2..4, --p the overall progress, all written on
+ * .chapters by the scroll handler. Defaults make the pre-hydration state chapter 1, fully visible.
+ * Reduced motion drops the sticky stage: four static panels, every text visible.
+ */
+.chapters {
+  position: relative;
+  height: 400vh;
+  height: 400svh;
+  background: #1e1a17;
+  --ease-ch: cubic-bezier(0.22, 1, 0.36, 1);
+}
+.chapters-frame {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  color: #fbf8f3;
+}
+.ch { display: contents; }
+.ch[data-i="1"] { --t: var(--t1, 0); }
+.ch[data-i="2"] { --t: var(--t2, 0); }
+.ch[data-i="3"] { --t: var(--t3, 0); }
+.ch-img {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.ch[data-i="1"] .ch-img { z-index: 2; }
+.ch[data-i="2"] .ch-img { z-index: 3; }
+.ch[data-i="3"] .ch-img { z-index: 4; }
+.ch[data-i="1"] .ch-img,
+.ch[data-i="2"] .ch-img,
+.ch[data-i="3"] .ch-img {
+  will-change: clip-path;
+  clip-path: inset(calc((1 - var(--t, 0)) * 100%) 0 0 0);
+}
+.ch-img img { will-change: transform; }
+.ch[data-i="0"] .ch-img img { transform: scale(calc(1 + 0.04 * (1 - var(--p, 0)))); }
+.ch[data-i="1"] .ch-img img,
+.ch[data-i="2"] .ch-img img,
+.ch[data-i="3"] .ch-img img { transform: scale(calc(1.08 - 0.08 * var(--t, 0))); }
+
+.chapters-scrim-top,
+.chapters-scrim-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+/* top scrim runs a little deeper than the handoff gradient so the body line stays >= 4.5:1 on bright renders */
+.chapters-scrim-top { top: 0; height: 62%; background: linear-gradient(180deg, rgba(30, 26, 23, 0.85) 0%, rgba(30, 26, 23, 0.62) 38%, transparent 100%); }
+.chapters-scrim-bottom { bottom: 0; height: 60%; background: linear-gradient(180deg, transparent 40%, rgba(30, 26, 23, 0.7) 75%, rgba(30, 26, 23, 0.95) 100%); }
+/* below lg the chapter text sits at the bottom over busy renders (the wave square) — darken earlier */
+@media (max-width: 1023px) {
+  .chapters-scrim-bottom { height: 72%; background: linear-gradient(180deg, transparent 0%, rgba(30, 26, 23, 0.55) 35%, rgba(30, 26, 23, 0.9) 70%, rgba(30, 26, 23, 0.97) 100%); }
+}
+
+.chapters-eyebrow {
+  position: absolute;
+  z-index: 20;
+  top: 5.5rem;
+  left: 1rem;
+  margin: 0;
+}
+.chapters-tag { position: absolute; z-index: 20; top: 7.25rem; right: 1rem; }
+
+.ch-text { position: absolute; z-index: 20; left: 1rem; right: 1rem; bottom: 2rem; max-width: 36rem; pointer-events: none; }
+.ch-script { font-size: 1.5rem; line-height: 1.2; color: #f1dcd6; }
+.ch-mask { overflow: hidden; padding-bottom: 0.12em; }
+.ch-title { font-size: 1.5rem; font-weight: 300; line-height: 1.2; letter-spacing: -0.01em; color: #fbf8f3; }
+.ch-body { margin-top: 0.75rem; font-size: 0.875rem; line-height: 1.6; color: #eae1d3; }
+.ch-rail { position: absolute; z-index: 20; left: 1rem; top: 8rem; width: 4rem; pointer-events: none; }
+.ch-index { font-size: 2.25rem; font-weight: 200; line-height: 1; letter-spacing: -0.04em; color: #fbf8f3; }
+.chapters-track {
+  position: absolute; z-index: 20; right: 1rem; top: 9.75rem; width: 2px; height: 96px;
+  background: rgba(243, 237, 228, 0.25);
+}
+.ch-thumb { width: 100%; height: 100%; background: #f1dcd6; transform: scaleY(var(--p, 0)); transform-origin: top; }
+.ch-pin { display: none; }
+
+@media (min-width: 1024px) {
+  .chapters-eyebrow { top: 6rem; left: 2rem; }
+  .chapters-tag { top: 6rem; right: 2rem; }
+  .ch-title { text-wrap: balance; }
+  .ch-text { top: 8.5rem; bottom: auto; left: 2rem; max-width: 44rem; }
+  .ch-script { font-size: 1.875rem; }
+  .ch-title { font-size: 2.25rem; line-height: 1.15; }
+  .ch-body { margin-top: 1rem; font-size: 1rem; max-width: 28rem; }
+  .ch-rail { top: auto; bottom: 2.5rem; left: 2rem; width: 7rem; }
+  .ch-index { font-size: 4.5rem; }
+  .chapters-track { right: auto; top: auto; bottom: 2.5rem; left: 8.5rem; height: 160px; }
+  .ch-pin {
+    display: block; position: absolute; z-index: 20; right: 2rem; bottom: 2.5rem; width: 240px;
+    border: 1px solid rgba(243, 237, 228, 0.4); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  }
+  .ch-pin .render-tag { position: absolute; right: 6px; bottom: 6px; }
+}
+
+/* Active chapter: title rises out of its mask, script/text/pin fade up; the outgoing one fades quickly */
+.ch-script, .ch-body, .ch-pin {
+  opacity: 0; transform: translateY(12px);
+  transition: opacity 250ms ease, transform 250ms ease;
+}
+.ch-title, .ch-index { display: block; transform: translateY(105%); transition: transform 250ms ease; }
+.ch.is-active .ch-title, .ch.is-active .ch-index {
+  transform: none; transition: transform 700ms var(--ease-ch);
+}
+.ch.is-active .ch-script { opacity: 1; transform: none; transition: opacity 500ms var(--ease-ch) 120ms, transform 500ms var(--ease-ch) 120ms; }
+.ch.is-active .ch-body { opacity: 1; transform: none; transition: opacity 500ms var(--ease-ch) 240ms, transform 500ms var(--ease-ch) 240ms; }
+.ch.is-active .ch-pin { opacity: 1; transform: none; transition: opacity 500ms var(--ease-ch) 200ms, transform 500ms var(--ease-ch) 200ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .chapters { height: auto; }
+  .chapters-frame { position: static; height: auto; overflow: visible; }
+  .chapters-scrim-top, .chapters-scrim-bottom, .chapters-track, .chapters-tag { display: none; }
+  .chapters-eyebrow { position: static; padding: 3rem 1rem 1.5rem; }
+  .ch {
+    display: flex; flex-direction: column; justify-content: flex-end; position: relative;
+    min-height: 75vh; padding: 5rem 1rem 2rem; overflow: hidden;
+  }
+  .ch::after {
+    content: ''; position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(180deg, rgba(30, 26, 23, 0.35) 0%, rgba(30, 26, 23, 0.55) 45%, rgba(30, 26, 23, 0.92) 100%);
+  }
+  .ch[data-i] .ch-img { clip-path: none; z-index: 0; will-change: auto; }
+  .ch[data-i] .ch-img img { transform: none; will-change: auto; }
+  .ch-text, .ch-rail { position: relative; z-index: 2; inset: auto; width: auto; max-width: 36rem; }
+  .ch-rail { order: -1; margin-bottom: 0.5rem; }
+  .ch-script, .ch-body, .ch-pin, .ch-title, .ch-index { opacity: 1; transform: none; transition: none; }
+  .ch-pin { display: none; }
+}
+@media (prefers-reduced-motion: reduce) and (min-width: 1024px) {
+  .ch { padding: 6rem 2rem 3rem; }
+  .chapters-eyebrow { padding: 4rem 2rem 1.5rem; }
+}
+
+/* ---- Spatial gallery + lightbox ---- */
+@keyframes gallery-fade { from { opacity: 0; } to { opacity: 1; } }
+.gallery-fade { animation: gallery-fade 180ms ease both; }
+@media (hover: hover) {
+  .gallery-card:hover img { transform: scale(1.03); }
+}
+.lightbox {
+  position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
+  margin: 0; padding: 0; border: 0; color: #fbf8f3; background: rgba(30, 26, 23, 0.97);
+}
+.lightbox:not([open]) { display: none; }
+.lightbox::backdrop { background: rgba(30, 26, 23, 0.9); }
+.lightbox-btn {
+  display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px;
+  border-radius: 9999px; color: #fbf8f3; background: rgba(30, 26, 23, 0.55);
+  border: 1px solid rgba(243, 237, 228, 0.4); transition: background-color 250ms ease;
+}
+.lightbox-btn:hover { background: rgba(122, 20, 20, 0.85); }
+.lightbox *:focus-visible { --tw-ring-color: #f1dcd6; --tw-ring-offset-color: #1e1a17; }
+@media (prefers-reduced-motion: reduce) {
+  .gallery-fade { animation: none; }
+  .gallery-card img { transition: none; }
+}
