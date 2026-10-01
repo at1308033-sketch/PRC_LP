@@ -27,7 +27,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-sans)', 'Georgia', 'serif'],
         display: ['var(--font-display)', 'Georgia', 'serif'],
         // Latin/digits only — see layout.tsx
         hand: ['var(--font-hand)', 'cursive'],

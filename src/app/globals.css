@@ -193,7 +193,7 @@ details[open] > .faq-body {
   opacity: 1;
   transform: none;
 }
-/* clip-path only on image wrappers — on text it cropped Fraunces descenders (g, y, p) below the line box */
+/* clip-path only on image wrappers — on text it cropped display-font descenders (g, y, p) below the line box */
 .js-reveal .reveal-clip.is-visible,
 .js-reveal .animate-clip-reveal.is-visible {
   clip-path: inset(0 0 0 0);

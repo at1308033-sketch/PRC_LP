@@ -2,7 +2,7 @@
 
 /**
  * ScrollTimeline — adapted from Aceternity UI Timeline (free tier), https://ui.aceternity.com
- * Changes: generic (no built-in heading), brand crimson beam and sand palette, Fraunces titles,
+ * Changes: generic (no built-in heading), brand crimson beam and sand palette, Playfair Display titles,
  * scroll progress comes from a passive scroll listener batched into one rAF, so the component needs
  * no animation library. The beam is a scaleY() on a CSS variable over a track that spans the list,
  * which gives it a real height in the server HTML (no 0px wrapper, no CLS) and keeps it visible

@@ -53,7 +53,7 @@ export default function Hero({ heroImage = '/images/heroes/hero-shophouse.avif' 
                 thương mại
               </span>
               <span className="reveal block text-accent" style={{ '--reveal-delay': '360ms' } as CSSProperties}>
-                giữa bốn mặt tiền.
+                giữa bốn mặt&nbsp;tiền.
               </span>
             </h1>
             <p className="body-lg reveal delay-400 mt-8 max-w-md text-concrete">

@@ -1,25 +1,27 @@
 import type { Metadata, Viewport } from 'next';
-import { Be_Vietnam_Pro, Fraunces } from 'next/font/google';
+import { Lora, Playfair_Display } from 'next/font/google';
 import localFont from 'next/font/local';
 import Analytics from '@/components/Analytics';
 import { site } from '@/lib/site';
 import './globals.css';
 
-// Both families ship a Vietnamese subset — Instrument Serif did not, so headings fell back to Georgia per diacritic.
-const sans = Be_Vietnam_Pro({
+// Both families ship a Vietnamese subset — Lora (body serif) and Playfair Display (heading serif).
+const sans = Lora({
   subsets: ['latin', 'vietnamese'],
   display: 'swap',
   variable: '--font-sans',
-  // 400 = default body text (no class), 700 = seal lettering; 500/600 = font-medium/semibold
+  // 400 = default body text (no class), 700 = bold; 500/600 = font-medium/semibold
   weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
   adjustFontFallback: true,
 });
 
-const display = Fraunces({
+const display = Playfair_Display({
   subsets: ['latin', 'vietnamese'],
   display: 'swap',
   variable: '--font-display',
-  axes: ['opsz', 'SOFT'],
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
   adjustFontFallback: true,
 });
 

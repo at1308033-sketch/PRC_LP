@@ -1,7 +1,7 @@
 import type { ElementType, ReactNode } from 'react';
 
 interface ArchCardProps {
-  /** Optional index label rendered top-right in Fraunces, e.g. "01". */
+  /** Optional index label rendered top-right in the display serif, e.g. \"01\". */
   index?: string;
   className?: string;
   children: ReactNode;

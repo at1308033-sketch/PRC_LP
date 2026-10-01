@@ -53,7 +53,7 @@ export function TextReveal({ children, className }: TextRevealProps) {
     window.addEventListener('scroll', onChange, { passive: true });
     window.addEventListener('resize', onChange);
 
-    // A font swap (Fraunces) or any reflow changes rect.height, hence `travel` — without this the
+    // A font swap (display font) or any reflow changes rect.height, hence `travel` — without this the
     // words stay stuck at a stale position until the next scroll event.
     const ro = new ResizeObserver(onChange);
     ro.observe(section);
