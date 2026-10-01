@@ -335,7 +335,8 @@ details[open] > .faq-body {
 .chapters-scrim-bottom { bottom: 0; height: 60%; background: linear-gradient(180deg, transparent 40%, rgba(30, 26, 23, 0.7) 75%, rgba(30, 26, 23, 0.95) 100%); }
 /* below lg the chapter text sits at the bottom over busy renders (the wave square) — darken earlier */
 @media (max-width: 1023px) {
-  .chapters-scrim-bottom { height: 72%; background: linear-gradient(180deg, transparent 0%, rgba(30, 26, 23, 0.55) 35%, rgba(30, 26, 23, 0.9) 70%, rgba(30, 26, 23, 0.97) 100%); }
+  .chapters-scrim-top { height: 30%; background: linear-gradient(180deg, rgba(30, 26, 23, 0.78) 0%, rgba(30, 26, 23, 0.35) 55%, transparent 100%); }
+  .chapters-scrim-bottom { height: 62%; background: linear-gradient(180deg, transparent 0%, rgba(30, 26, 23, 0.5) 40%, rgba(30, 26, 23, 0.88) 72%, rgba(30, 26, 23, 0.96) 100%); }
 }
 
 .chapters-eyebrow {

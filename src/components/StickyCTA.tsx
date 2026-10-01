@@ -27,7 +27,8 @@ export default function StickyCTA() {
     };
   }, []);
 
-  // Hide while the lead form, the final CTA or the lot map (it has its own per-lot CTA that the bar would cover) is on screen
+  // Hide while the lead form, the final CTA, the lot map (it has its own per-lot CTA that the bar would cover)
+  // or the full-screen space chapters (the bar would sit over their titles and chapter index) is on screen
   useEffect(() => {
     if (!('IntersectionObserver' in window)) return;
     const inView = new Set<string>();
@@ -38,7 +39,7 @@ export default function StickyCTA() {
       }
       setCtaInView(inView.size > 0);
     });
-    ['vi-tri', 'tai-lieu', 'dang-ky'].forEach((id) => {
+    ['vi-tri', 'khong-gian-noi-khu', 'tai-lieu', 'dang-ky'].forEach((id) => {
       const el = document.getElementById(id);
       if (el) io.observe(el);
     });

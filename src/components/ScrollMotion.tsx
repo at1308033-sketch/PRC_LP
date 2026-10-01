@@ -67,19 +67,28 @@ export default function ScrollMotion() {
     const liveCounters = new Set<Counter>();
     const counted = new WeakSet<HTMLElement>();
 
+    // Elements still waiting to be revealed (see the sweep below).
+    const pending = new Set<HTMLElement>();
+    const reveal = (el: HTMLElement) => {
+      el.classList.add('is-visible');
+      // Run at most once per element: re-reading textContent mid-animation would parse the
+      // half-finished value as the target and freeze the count.
+      if (el.dataset.countup !== undefined && !counted.has(el)) {
+        counted.add(el);
+        countUp(el, liveCounters);
+      }
+      revealIO.unobserve(el);
+      pending.delete(el);
+    };
+    const watch = (el: HTMLElement) => {
+      pending.add(el);
+      revealIO.observe(el);
+    };
+
     const revealIO = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          const el = entry.target as HTMLElement;
-          el.classList.add('is-visible');
-          // Run at most once per element: re-reading textContent mid-animation would parse the
-          // half-finished value as the target and freeze the count.
-          if (el.dataset.countup !== undefined && !counted.has(el)) {
-            counted.add(el);
-            countUp(el, liveCounters);
-          }
-          revealIO.unobserve(el);
+          if (entry.isIntersecting) reveal(entry.target as HTMLElement);
         }
       },
       // threshold [0, 0.12]: a block taller than ~8 viewports can never reach 12% visibility, so a
@@ -96,7 +105,7 @@ export default function ScrollMotion() {
         });
       });
       scope.querySelectorAll<HTMLElement>(`${REVEAL_SELECTOR}, [data-countup]`).forEach((el) => {
-        if (!el.classList.contains('is-visible')) revealIO.observe(el);
+        if (!el.classList.contains('is-visible')) watch(el);
       });
     };
     setup(document);
@@ -108,10 +117,7 @@ export default function ScrollMotion() {
     const onFocusIn = (e: FocusEvent) => {
       let el = e.target instanceof HTMLElement || e.target instanceof SVGElement ? (e.target as Element) : null;
       while (el) {
-        if (el.matches(REVEAL_SELECTOR) && !el.classList.contains('is-visible')) {
-          el.classList.add('is-visible');
-          revealIO.unobserve(el);
-        }
+        if (el.matches(REVEAL_SELECTOR) && !el.classList.contains('is-visible')) reveal(el as HTMLElement);
         el = el.parentElement;
       }
     };
@@ -135,7 +141,7 @@ export default function ScrollMotion() {
         if (r.target instanceof Element && r.target.closest('[data-countup]')) continue;
         r.addedNodes.forEach((n) => {
           if (!(n instanceof HTMLElement)) return;
-          if (n.matches(`${REVEAL_SELECTOR}, [data-countup]`)) revealIO.observe(n);
+          if (n.matches(`${REVEAL_SELECTOR}, [data-countup]`)) watch(n);
           setup(n);
           collectParallax(n);
         });
@@ -143,9 +149,22 @@ export default function ScrollMotion() {
     });
     mo.observe(document.body, { childList: true, subtree: true });
 
+    // A fast fling on a busy main thread can carry an element from below the viewport to above it
+    // between two rendered frames: its ratio stays 0, the observer never fires, and it would stay hidden
+    // for good. Once scrolling settles, reveal everything whose top is above the viewport bottom.
+    let sweepTimer = 0;
+    const sweep = () => {
+      const vh = window.innerHeight;
+      pending.forEach((el) => {
+        if (el.getBoundingClientRect().top < vh) reveal(el);
+      });
+    };
+
     // Parallax + scroll progress, batched in one rAF per frame.
     let frame = 0;
     const onScroll = () => {
+      window.clearTimeout(sweepTimer);
+      sweepTimer = window.setTimeout(sweep, 150);
       if (frame) return;
       frame = requestAnimationFrame(() => {
         frame = 0;
@@ -171,6 +190,7 @@ export default function ScrollMotion() {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
       cancelAnimationFrame(frame);
+      window.clearTimeout(sweepTimer);
       liveCounters.forEach((counter) => cancelAnimationFrame(counter.frame));
       liveCounters.clear();
     };

@@ -71,7 +71,7 @@ export default function ChapterScroller({ children, className }: { children: Rea
   }, []);
 
   return (
-    <section ref={ref} className={className} aria-labelledby="chapters-title">
+    <section ref={ref} id="khong-gian-noi-khu" className={className} aria-labelledby="chapters-title">
       {children}
     </section>
   );

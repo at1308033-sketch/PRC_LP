@@ -10,28 +10,28 @@ const chapters = [
     script: 'Shopfront',
     title: 'Mặt tiền thương mại',
     text: 'Dãy nhà phố 5 tầng, tầng trệt mở ra vỉa hè — mỗi căn là một mặt bằng kinh doanh.',
-    main: { n: 3, alt: 'Phối cảnh minh họa dãy nhà phố thương mại và vỉa hè phía trước' },
+    main: { n: 3, pos: 'object-[65%_center] lg:object-center', alt: 'Phối cảnh minh họa dãy nhà phố thương mại và vỉa hè phía trước' },
     pin: { n: 4, alt: 'Phối cảnh minh họa chi tiết mặt tiền tầng trệt' },
   },
   {
     script: 'The Wave Square',
     title: 'Quảng trường Nhịp Điệu Sóng · 3.200 m²',
     text: 'Quảng trường trung tâm với đài phun nước, ngay trước dãy phố.',
-    main: { n: 10, alt: 'Phối cảnh minh họa quảng trường Nhịp Điệu Sóng 3.200 m²' },
+    main: { n: 10, pos: 'object-[58%_center] lg:object-center', alt: 'Phối cảnh minh họa quảng trường Nhịp Điệu Sóng 3.200 m²' },
     pin: { n: 2, alt: 'Phối cảnh minh họa đài phun nước trong quảng trường' },
   },
   {
     script: 'Light Park',
     title: 'Công viên ánh sáng và lối dạo',
     text: 'Mảng xanh, bậc cỏ và lối dạo nối các dãy nhà phố.',
-    main: { n: 15, alt: 'Phối cảnh minh họa bậc cỏ và lối dạo trong công viên' },
+    main: { n: 15, pos: 'object-[40%_center] lg:object-center', alt: 'Phối cảnh minh họa bậc cỏ và lối dạo trong công viên' },
     pin: { n: 7, alt: 'Phối cảnh minh họa điểm nhấn cảnh quan trong công viên' },
   },
   {
     script: 'Promenade',
     title: 'Khu đi bộ dưới tán cây',
     text: 'Lối đi bộ nội khu dọc mặt tiền, có bóng cây và chỗ ngồi.',
-    main: { n: 18, alt: 'Phối cảnh minh họa lối đi bộ nội khu dưới tán cây' },
+    main: { n: 18, pos: 'object-[65%_center] lg:object-center', alt: 'Phối cảnh minh họa lối đi bộ nội khu dưới tán cây' },
     pin: { n: 8, alt: 'Phối cảnh minh họa mặt lát lối đi bộ nội khu' },
   },
 ];
@@ -56,7 +56,8 @@ export default function SpacesChapters() {
         {chapters.map((c, i) => (
           <article key={c.title} className={`ch${i === 0 ? ' is-active' : ''}`} data-i={i}>
             <div className="ch-img">
-              <Image src={`/images/sections/${c.main.n}.webp`} alt={c.main.alt} fill sizes="100vw" className="object-cover" />
+              {/* on screens taller than 16:9, cover renders the image 100vh × 16/9 wide — request that width, not 100vw */}
+              <Image src={`/images/sections/${c.main.n}.webp`} alt={c.main.alt} fill sizes="(max-aspect-ratio: 16/9) 178vh, 100vw" className={`object-cover ${c.main.pos}`} />
             </div>
 
             <div className="ch-text">

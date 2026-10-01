@@ -62,14 +62,13 @@ export default function UseCase() {
   return (
     <section
       id="use-case"
-      className="py-20 sm:py-28 lg:py-32 bg-charcoal"
+      className="py-20 sm:py-28 lg:py-32 bg-off-white"
       aria-labelledby="usecase-title"
     >
       <div className="section-wrapper">
         <div className="section-inner">
           <SectionHeader
             id="usecase-title"
-            tone="dark"
             eyebrow="Mô hình kinh doanh"
             title="4 mô hình minh họa: F&B · Retail · Office · Service"
           />
@@ -80,24 +79,24 @@ export default function UseCase() {
             data-stagger
           >
             {concepts.map((concept, idx) => (
-              <ArchCard key={concept.id} tone="dark" index={String(idx + 1).padStart(2, '0')}>
+              <ArchCard key={concept.id} index={String(idx + 1).padStart(2, '0')}>
                 <button
                   onClick={() => setActiveConcept(activeConcept === concept.id ? null : concept.id)}
                   className={`block h-full w-full text-left p-6 lg:p-8 pt-10 lg:pt-12 transition-colors duration-arch ease-arch
-                    ${activeConcept === concept.id ? 'bg-accent/25 ring-1 ring-inset ring-accent-light' : ''}
+                    ${activeConcept === concept.id ? 'bg-accent-light/60 ring-1 ring-inset ring-accent' : ''}
                   `}
                 >
-                  <span className="mb-5 flex h-14 w-14 items-center justify-center border border-accent-light/50">
-                    <concept.Icon className="h-8 w-8 text-accent-light" />
+                  <span className="mb-5 flex h-14 w-14 items-center justify-center border border-accent/40">
+                    <concept.Icon className="h-8 w-8 text-accent" />
                   </span>
-                  <h3 className="font-display text-3xl text-warm-white mb-2">{concept.label}</h3>
-                  <p className="body-sm text-warm-white/75 mb-5">{concept.desc}</p>
-                  <p className="caption text-warm-white/60 mb-2">Có thể bố trí:</p>
-                  <ul className="space-y-2 border-t border-warm-white/15 pt-5 text-sm text-warm-white/70">
+                  <h3 className="font-display text-3xl text-charcoal mb-2">{concept.label}</h3>
+                  <p className="body-sm text-concrete mb-5">{concept.desc}</p>
+                  <p className="caption text-concrete mb-2">Có thể bố trí:</p>
+                  <ul className="space-y-2 border-t border-concrete/15 pt-5 text-sm text-concrete">
                     {concept.features.map((f, i) => (
                       <li key={i} className="flex items-center gap-2">
                         <span
-                          className="h-1.5 w-1.5 rounded-full bg-accent-light"
+                          className="h-1.5 w-1.5 rounded-full bg-accent"
                           aria-hidden="true"
                         />
                         {f}
@@ -190,8 +189,8 @@ export default function UseCase() {
 
           {/* Disclaimer */}
           <div className="max-w-3xl reveal-fade delay-300">
-            <p className="body-sm text-warm-white/65">
-              <span className="font-medium text-warm-white">MÔ HÌNH MINH HỌA</span> – Các hình ảnh
+            <p className="body-sm text-concrete">
+              <span className="font-medium text-charcoal">MÔ HÌNH MINH HỌA</span> – Các hình ảnh
               và mô tả ở trên chỉ mang tính chất minh họa các khả năng sử dụng tiềm năng của sản
               phẩm. Không cam kết tenant, thương hiệu hoặc mô hình kinh doanh cụ thể.
             </p>

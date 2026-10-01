@@ -1,12 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export interface LightboxItem {
   src: string;
   alt: string;
   caption: string;
+  thumbSizes?: string;
 }
 
 interface LightboxProps {
@@ -21,6 +22,9 @@ interface LightboxProps {
 export default function Lightbox({ items, index, onIndex, onClose }: LightboxProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const opener = useRef<HTMLElement | null>(null);
+  // which src finished loading — keyed by src, not a reset effect: a cached image fires onLoad during mount,
+  // before any effect could reset a boolean, and would stay hidden behind the soft underlay
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
   const open = index !== null;
 
   useEffect(() => {
@@ -89,7 +93,18 @@ export default function Lightbox({ items, index, onIndex, onClose }: LightboxPro
           </div>
 
           <div className="relative min-h-0 flex-1">
-            <Image key={item.src} src={item.src} alt={item.alt} fill sizes="100vw" className="object-contain" />
+            {item.thumbSizes && (
+              <Image src={item.src} alt="" aria-hidden="true" fill sizes={item.thumbSizes} className="object-contain" />
+            )}
+            <Image
+              key={item.src}
+              src={item.src}
+              alt={item.alt}
+              fill
+              sizes="100vw"
+              onLoad={() => setLoadedSrc(item.src)}
+              className={`object-contain transition-opacity duration-300 ${loadedSrc === item.src ? 'opacity-100' : 'opacity-0'}`}
+            />
             <button type="button" onClick={() => go(-1)} className="lightbox-btn absolute left-2 top-1/2 -translate-y-1/2 sm:left-4" aria-label="Ảnh trước">
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
                 <path d="M15 5l-7 7 7 7" />

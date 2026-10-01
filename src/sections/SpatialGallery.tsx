@@ -58,10 +58,11 @@ export default function SpatialGallery() {
   const [open, setOpen] = useState<number | null>(null);
   const tabRefs = useRef<Partial<Record<Tab, HTMLButtonElement | null>>>({});
 
-  const items = sets[tab].map((s) => ({
+  const items = sets[tab].map((s, i) => ({
     src: `/images/sections/${s.n}.webp`,
     alt: `Phối cảnh minh họa: ${s.caption}`,
     caption: s.caption,
+    thumbSizes: sizes[i],
   }));
 
   const onTabKey = (e: KeyboardEvent<HTMLButtonElement>) => {
